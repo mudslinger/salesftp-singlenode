@@ -1,10 +1,13 @@
 ftpd = require 'ftpd'
 moment = require 'moment'
 AWS = require 'aws-sdk'
+AWS.config.region = 'ap-northeast-1'
+
 module.exports = (ftppasswd,passiveIp)->
   console.log passiveIp
   s3 = new AWS.S3
     params:
+      s3_endpoint: 's3-ap-northeast-1.amazonaws.com' 
       Bucket: 'sales.wb.yamaokaya.com'
   S3fs = require './s3fs'
 
@@ -15,8 +18,8 @@ module.exports = (ftppasswd,passiveIp)->
     return fss[key]
 
   options =
-    pasvPortRangeStart: 40000
-    pasvPortRangeEnd: 41000
+    pasvPortRangeStart: 50000
+    pasvPortRangeEnd: 51000
     useWriteFile: true
     useReadFile: true
     getInitialCwd: (connection)->
