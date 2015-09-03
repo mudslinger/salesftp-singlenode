@@ -19,3 +19,7 @@ packages:
 runcmd:
   - [sed, -i, 's/en_US/ja_JP/', /etc/sysconfig/i18n]
   - [cp, /usr/share/zoneinfo/Asia/Tokyo, /etc/localtime]
+  - ['git','clone','https://github.com/mudslinger/salesftp-singlenode.git','/srv/ftp']
+  - ['cd', '/srv/ftp']
+  - ['npm', 'install']
+  - ['npm','start']
