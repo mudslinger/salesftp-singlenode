@@ -1,0 +1,10 @@
+version: 0.1
+os: linux
+files:
+  - source: src/
+  	destination: /srv/ftp
+hooks:
+  ApplicationStart: 
+    location: scripts/startup.sh
+    timeout: 300
+    runas: root
