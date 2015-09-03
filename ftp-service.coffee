@@ -36,7 +36,7 @@ module.exports = (ftppasswd,passiveIp)->
       if /^s[0-9]{4}$/.test username then success() else failure()
     conn.on 'command:pass' ,(pass,success,failure)->
       if pass == ftppasswd
-        key = "#{username}/#{moment().year()}"
+        key = "#{username.match(/[0-9]{4}/)}/#{moment().add(-12,'h').year()}"
         s3.putObject
           Key: key + '/'
           Body: null
