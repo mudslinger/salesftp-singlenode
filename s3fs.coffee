@@ -1,6 +1,7 @@
 zlib = require 'zlib'
 mime = require 'mime'
 module.exports = class S3fs
+  cache: require 'memory-cache'
   s3: null
   chroot : ''
   constructor: (key,s3)->
@@ -68,17 +69,23 @@ module.exports = class S3fs
     #console.log 'readdir:'
     #console.log path
     path = @pathmand(path)
+    o = cache.get(@chroot + path)
 
-    #console.log path
-    @exists path,(exists)=>
-      if exists
-        @s3.listObjects
-          Prefix: path
-          (err,data)->
-            if data
-              files = (item.Key.replace(path,'') for item in contents when item.Key != path)
-              #console.log "files:#{files}"
-              callback(err,files)
+    if o
+      callback(null,o)
+    else
+      #console.log path
+      @exists path,(exists)=>
+        if exists
+          @s3.listObjects
+            Prefix: path
+            (err,data)->
+              if data
+                files = (item.Key.replace(path,'') for item in data.Contents when item.Key != path)
+                #console.log "files:#{files}"
+                cache.put(@chroot + path,files)
+                callback(err,files)
+
   mkdir: (path,permission=777, callback)->
     #console.log 'mkdir:'
     path = @pathmand(path)
