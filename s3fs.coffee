@@ -71,6 +71,7 @@ module.exports = class S3fs
     o = require('memory-cache').get(@chroot + path)
 
     if o
+      console.log "cache hit #{path}"
       callback(null,o)
     else
       #console.log path
@@ -82,7 +83,7 @@ module.exports = class S3fs
               if data
                 files = (item.Key.replace(path,'') for item in data.Contents when item.Key != path)
                 #console.log "files:#{files}"
-                require('memory-cache').put(@chroot + path,files,30 * 1000)
+                require('memory-cache').put(@chroot + path,files,5*1000)
                 callback(err,files)
 
   mkdir: (path,permission=777, callback)->
