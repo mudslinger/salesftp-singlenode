@@ -76,7 +76,6 @@ module.exports = class S3fs
           Prefix: path
           (err,data)->
             if data
-              contents = data.Contents
               files = (item.Key.replace(path,'') for item in contents when item.Key != path)
               #console.log "files:#{files}"
               callback(err,files)

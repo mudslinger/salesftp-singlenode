@@ -23,8 +23,8 @@ def putcsv(path,id)
 end
 
 
-list = Dir.glob('//neptune/glory/11??').map { |f| {id: f.match(/[0-9]{4}$/).to_s,file:f}}
-Parallel.each(list, in_threads: 8) {|o|
+list = Dir.glob('//neptune/glory/12??').map { |f| {id: f.match(/[0-9]{4}$/).to_s,file:f}}
+Parallel.each(list, in_threads: 9) {|o|
   puts "start upload #{o}"
   putcsv(o[:file],o[:id])
   puts "end upload: #{o}"
