@@ -3,6 +3,11 @@ mime = require 'mime'
 module.exports = class S3fs
   s3: null
   chroot : ''
+  mycache: null
+  cache: ->
+    unless @mycache
+      @mycache = require('memory-cache')
+    @mycache
   constructor: (key,s3)->
     @s3 = s3
     @chroot = key
@@ -68,7 +73,7 @@ module.exports = class S3fs
     #console.log 'readdir:'
     #console.log path
     path = @pathmand(path)
-    o = require('memory-cache').get("l:#{@chroot}#{path}")
+    o = @cache().get("l:#{@chroot}#{path}")
 
     if o
       console.log "cache hit #{path}"
@@ -83,7 +88,7 @@ module.exports = class S3fs
               if data
                 files = (item.Key.replace(path,'') for item in data.Contents when item.Key != path)
                 #console.log "files:#{files}"
-                require('memory-cache').put("l:#{@chroot}#{path}",files,5*1000)
+                @cache().put("l:#{@chroot}#{path}",files,5*1000)
                 callback(err,files)
 
   mkdir: (path,permission=777, callback)->
@@ -136,18 +141,18 @@ module.exports = class S3fs
     filestat = @filestat
     dirstat = @dirstat
 
-    o = require('memory-cache').get("s:#{@chroot}#{path}")
+    o = @cache().get("s:#{@chroot}#{path}")
     if o
       callback false,o
     else
       @folder_exists path,(exists)=>
         if exists
-          require('memory-cache').put("s:#{@chroot}#{path}",dirstat(exists.LastModified),60*1000)
+          @cache().put("s:#{@chroot}#{path}",dirstat(exists.LastModified),60*1000)
           callback false,dirstat(exists.LastModified)
         else
           @file_exists path,(exists)=>
             if exists
-              require('memory-cache').put("s:#{@chroot}#{path}",filestat(exists.ContentLength,exists.LastModified),60*1000)
+              @cache().put("s:#{@chroot}#{path}",filestat(exists.ContentLength,exists.LastModified),60*1000)
               callback false, filestat(exists.ContentLength,exists.LastModified)
             else
               callback 'not found', false
