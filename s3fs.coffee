@@ -3,11 +3,9 @@ mime = require 'mime'
 module.exports = class S3fs
   s3: null
   chroot : ''
-  mycache: null
   cache: ->
-    unless @mycache
-      @mycache = require('memory-cache')
-    @mycache
+    require('memory-cache')
+    
   constructor: (key,s3)->
     @s3 = s3
     @chroot = key
