@@ -135,15 +135,22 @@ module.exports = class S3fs
     #console.log path
     filestat = @filestat
     dirstat = @dirstat
-    @folder_exists path,(exists)=>
-      if exists
-        callback false,dirstat(exists.LastModified)
-      else
-        @file_exists path,(exists)=>
-          if exists
-            callback false, filestat(exists.ContentLength,exists.LastModified)
-          else
-            callback 'not found', false
+
+    o = require('memory-cache').get("s:#{@chroot}#{path}")
+    if o
+      callback false,o
+    else
+      @folder_exists path,(exists)=>
+        if exists
+          require('memory-cache').put("s:#{@chroot}#{path}",dirstat(exists.LastModified),60*1000)
+          callback false,dirstat(exists.LastModified)
+        else
+          @file_exists path,(exists)=>
+            if exists
+              require('memory-cache').put("s:#{@chroot}#{path}",filestat(exists.ContentLength,exists.LastModified),60*1000)
+              callback false, filestat(exists.ContentLength,exists.LastModified)
+            else
+              callback 'not found', false
 
   exists: (path,callback)->
     path = @pathman(path)
