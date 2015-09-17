@@ -37,8 +37,8 @@ module.exports = class S3fs
     ((if s.charCodeAt(0) > 127 then encodeURI(s) else s)for s in str.split('')).join('')
 
   pathman: (path)->
-    console.log 'chroot:',@chroot
-    console.log 'path:',path
+    #console.log 'chroot:',@chroot
+    #console.log 'path:',path
     path = @encodePath path
     p = null
     if path.indexOf(@chroot) != 0
@@ -65,11 +65,11 @@ module.exports = class S3fs
       (err,data)->
         callback err
   readdir: (path, callback)->
-    console.log 'readdir:'
-    console.log path
+    #console.log 'readdir:'
+    #console.log path
     path = @pathmand(path)
 
-    console.log path
+    #console.log path
     @exists path,(exists)=>
       if exists
         @s3.listObjects
@@ -78,20 +78,20 @@ module.exports = class S3fs
             if data
               contents = data.Contents
               files = (item.Key.replace(path,'') for item in contents when item.Key != path)
-              console.log "files:#{files}"
+              #console.log "files:#{files}"
               callback(err,files)
   mkdir: (path,permission=777, callback)->
-    console.log 'mkdir:'
+    #console.log 'mkdir:'
     path = @pathmand(path)
-    console.log 'callback is:',callback
+    #console.log 'callback is:',callback
     @exists path,(exists)=>
       unless exists
         @s3.putObject
           Key: path
           Body: null
           (err,data)->
-            console.log err
-            console.log data
+            #console.log err
+            #console.log data
             callback err,data
   writeFile: (path, data, callback)->
     path = @pathman(path)
@@ -109,8 +109,8 @@ module.exports = class S3fs
         @s3.getObject
           Key: path
           (err,data)=>
-            console.log err
-            console.log data
+            #console.log err
+            #console.log data
             throw err if err
             if data.ContentEncoding == 'gzip'
               zlib.gunzip data.Body,(err2,bin)=>
@@ -122,11 +122,11 @@ module.exports = class S3fs
   rename: (f)->
     0
   stat: (path,callback)->
-    console.log 'stat:'
-    console.log path
+    #console.log 'stat:'
+    #console.log path
     #TODO FIX
     path = @pathman(path)
-    console.log path
+    #console.log path
     filestat = @filestat
     dirstat = @dirstat
     @folder_exists path,(exists)=>
@@ -141,8 +141,8 @@ module.exports = class S3fs
 
   exists: (path,callback)->
     path = @pathman(path)
-    console.log 'exists:'
-    console.log path
+    #console.log 'exists:'
+    #console.log path
     @s3.headObject
       Key: path
       (err,data)=>
