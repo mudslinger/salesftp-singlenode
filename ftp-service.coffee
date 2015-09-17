@@ -4,7 +4,7 @@ AWS = require 'aws-sdk'
 AWS.config.region = 'ap-northeast-1'
 
 module.exports = (ftppasswd,passiveIp)->
-  console.log passiveIp
+  #console.log passiveIp
   s3 = new AWS.S3
     params:
       s3_endpoint: 's3-ap-northeast-1.amazonaws.com' 
@@ -14,7 +14,7 @@ module.exports = (ftppasswd,passiveIp)->
   fss = {}
   getUserFS = (key)->
     fss[key] = new S3fs(key,s3) unless fss[key]
-    console.log key,fss[key]
+    #console.log key,fss[key]
     return fss[key]
 
   options =
@@ -30,7 +30,7 @@ module.exports = (ftppasswd,passiveIp)->
   server = new ftpd.FtpServer passiveIp, options
   server.on 'client:connected',(conn)->
     username = null
-    console.log "Client connected from #{conn.socket.remoteAddress}"
+    #console.log "Client connected from #{conn.socket.remoteAddress}"
     conn.on 'command:user',(user,success,failure)->
       username = user
       if /^s[0-9]{4}$/.test username then success() else failure()
