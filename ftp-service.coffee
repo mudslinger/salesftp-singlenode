@@ -36,7 +36,7 @@ module.exports = (config = {passwd:'1234',port: 21,datastart: 50000,dataend:5099
       username = user
       if /^s[0-9]{4}$/.test username then success() else failure()
     conn.on 'command:pass' ,(pass,success,failure)->
-      if pass == ftppasswd
+      if pass == config.passwd
         key = "#{username.match(/[0-9]{4}/)}/#{moment().add(-12,'h').year()}"
         s3.putObject
           Key: key + '/'
