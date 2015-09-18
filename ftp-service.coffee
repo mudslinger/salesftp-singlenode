@@ -3,7 +3,8 @@ moment = require 'moment'
 AWS = require 'aws-sdk'
 AWS.config.region = 'ap-northeast-1'
 
-module.exports = (ftppasswd,passiveIp,port = 21,passivestart = 50000,passveend = 51000)->
+module.exports = (config = {passwd:'1234',port: 21,datastart: 50000,dataend:50999})->
+
   #console.log passiveIp
   s3 = new AWS.S3
     params:
@@ -18,8 +19,8 @@ module.exports = (ftppasswd,passiveIp,port = 21,passivestart = 50000,passveend =
     return fss[key]
 
   options =
-    pasvPortRangeStart: passivestart
-    pasvPortRangeEnd: passveend
+    pasvPortRangeStart: config.datastart
+    pasvPortRangeEnd: config.dataend
     useWriteFile: true
     useReadFile: true
     getInitialCwd: (connection)->
@@ -27,7 +28,7 @@ module.exports = (ftppasswd,passiveIp,port = 21,passivestart = 50000,passveend =
     getRoot: (user)->
       ''
 
-  server = new ftpd.FtpServer passiveIp, options
+  server = new ftpd.FtpServer config.passiveIp, options
   server.on 'client:connected',(conn)->
     username = null
     #console.log "Client connected from #{conn.socket.remoteAddress}"
@@ -49,7 +50,7 @@ module.exports = (ftppasswd,passiveIp,port = 21,passivestart = 50000,passveend =
         failure()
 
   server.debugging = 4
-  server.listen port
-  console.log "FTPD listening on port #{port}"
+  server.listen config.port
+  console.log "FTPD listening on port #{config.port}"
 
 
