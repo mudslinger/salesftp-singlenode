@@ -1,12 +1,18 @@
 {
+
   "name": "node-ftpd",
   "version": "1.0.0",
   "description": "",
   "main": "server.coffee",
+  "config": {
+      "unsafe-perm":true
+   },
   "scripts": {
+    "preinstall": "npm i -g coffee-script pm2 node-gyp",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "forever -c coffee server.coffee"
+    "start": "pm2 start server.coffee"
   },
+
   "author": "",
   "license": "ISC",
   "dependencies": {
