@@ -10,7 +10,7 @@
   "scripts": {
     "preinstall": "npm i -g coffee-script pm2 node-gyp",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start server.coffee"
+    "start": "pm2 start process.json"
   },
 
   "author": "",
