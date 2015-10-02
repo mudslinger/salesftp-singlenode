@@ -5,7 +5,7 @@ require 'parallel'
 
 def putcsv(path,id)
 	puts path
-	Net::FTP.open('52.68.64.73') do |ftp|
+	Net::FTP.open('54.64.55.136') do |ftp|
 	  ftp.login("s#{id}",'1234')
 	  ftp.passive = true
 	  # ftp.nlst do |f|
