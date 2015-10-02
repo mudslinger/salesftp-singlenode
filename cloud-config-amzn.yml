@@ -17,7 +17,6 @@ packages:
   - nodejs
   - git
 runcmd:
-  - "aws ec2 associate-address --allow-reassociation --allocation-id eipalloc-ef906c8a --region ap-northeast-1 --instance-id $(curl http://169.254.169.254/latest/meta-data/instance-id)"
   - [sed, -i, 's/en_US/ja_JP/', /etc/sysconfig/i18n]
   - [cp, /usr/share/zoneinfo/Asia/Tokyo, /etc/localtime]
   - ['git','clone','https://github.com/mudslinger/salesftp-singlenode.git','/srv/ftp']
@@ -27,6 +26,9 @@ runcmd:
   - ['npm', 'install','-g','coffee-script']
   - ['npm', 'install','-g','pm2']
   - ['npm', 'install']
-  - ['npm', 'start']
+  - ['pm2','startup','centos']
+  - "aws ec2 associate-address --allow-reassociation --allocation-id eipalloc-ef906c8a --region ap-northeast-1 --instance-id $(curl http://169.254.169.254/latest/meta-data/instance-id)"
+  - ['pm2','start','/srv/ftp/process.json']
+  - ['service', ' pm2-init.sh','start']
 
 

@@ -2,5 +2,5 @@
   "name": "ftpserver",
   "script": "start-ftp-server.coffee",
   "exec_mode": "fork",
-  "instances": 2
+  "instances": 1
 }
