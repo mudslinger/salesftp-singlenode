@@ -9,7 +9,7 @@
    },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/pm2 start process.json"
+    "start": "pm2 start start-ftp-server.coffee -i 1"
   },
 
   "author": "",
