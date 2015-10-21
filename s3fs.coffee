@@ -1,6 +1,6 @@
 zlib = require 'zlib'
 mime = require 'mime'
-cache= require('memory-cache')
+cache= require 'memory-cache'
 module.exports = class S3fs
   s3: null
   chroot : ''
@@ -104,7 +104,6 @@ module.exports = class S3fs
   writeFile: (path, data, callback)->
     path = @pathman(path)
     @s3.putObject
-      ACL: 'public-read'
       Key: path
       Body: data
       ContentType: mime.lookup path

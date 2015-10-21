@@ -3,13 +3,13 @@ moment = require 'moment'
 AWS = require 'aws-sdk'
 AWS.config.region = 'ap-northeast-1'
 
-module.exports = (config = {passwd:'1234',port: 21,datastart: 50000,dataend:50999})->
+module.exports = (config = {passwd:'1234',port: 21,datastart: 50000,dataend:51999})->
 
   #console.log passiveIp
   s3 = new AWS.S3
     params:
       s3_endpoint: 's3-ap-northeast-1.amazonaws.com' 
-      Bucket: 'sales.wb.yamaokaya.com'
+      Bucket: 'sales.ftp.yamaokaya.com'
   S3fs = require './s3fs'
 
   fss = {}
