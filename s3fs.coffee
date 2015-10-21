@@ -103,12 +103,14 @@ module.exports = class S3fs
             callback err,data
   writeFile: (path, data, callback)->
     path = @pathman(path)
-    @s3.putObject
-      Key: path
-      Body: data
-      ContentType: mime.lookup path
-      (err,data)->
-        callback err,data
+    zlib.gzip data,(err2,bin)=>
+      @s3.putObject
+        Key: path
+        Body: bin
+        ContentEncoding: 'gzip'
+        ContentType: mime.lookup path
+        (err,data)->
+          callback err,data
   readFile: (path,callback)->
     path = @pathman(path)
     @exists path,(exists)=>
